@@ -248,7 +248,7 @@ void OrientationManager::createTray()
     QAction* lockAct = new QAction(tr("L&ock"), this);
     lockAct->setCheckable(true);
     lockAct->setStatusTip(tr("Lock the current orientation"));
-    connect(lockAct, SIGNAL(triggered), this, SLOT(lockUnlock()));
+    connect(lockAct, SIGNAL(triggered()), this, SLOT(lockUnlock()));
 
     QAction* settingsAct = new QAction(tr("S&ettings"), this);
     settingsAct->setShortcuts(QKeySequence::Preferences);
