@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/computer-laptop.svg</file>
+        <file>images/pairs.svgz</file>
+        <file>images/question.svg</file>
+        <file>images/smartphone.svg</file>
+        <file>images/tablet.svg</file>
+        <file>images/transform-rotate.svg</file>
+    </qresource>
+</RCC>
