@@ -104,8 +104,8 @@ public Q_SLOTS:
         if (m_accellerometerName != accellerometerName)
         {
             m_accellerometerName = accellerometerName;
+            m_initializeRetries = 0;
             initializeAccellerometer();
-            startAccellerometer();
         }
     }
 
@@ -175,6 +175,7 @@ private:
     RawInputHandler* _rawInputHandler;
     QString m_accellerometerName;
     QSystemTrayIcon* _tray;
+    int m_initializeRetries;
     int m_pollingInterval;
     int m_notifyDelay;
 

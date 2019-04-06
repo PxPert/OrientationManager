@@ -37,7 +37,7 @@
 
 #define COMPONENT_NAME "Orientation Manager"
 
-OrientationManager::OrientationManager(QObject *parent = NULL)
+OrientationManager::OrientationManager(QObject *parent)
     : QObject(parent)
 {
     qDebug() << "Creating Orientation Manager";
@@ -47,9 +47,10 @@ OrientationManager::OrientationManager(QObject *parent = NULL)
     _tmrAccellerometer = new QTimer(this);
     _tmrAccellerometer->setSingleShot(true);
     connect (_tmrAccellerometer,SIGNAL(timeout()),this,SLOT(tmrAccellerometer_timeout()));
-    _accellerometer = NULL;
-    _rawInputHandler = NULL;
+    _accellerometer = nullptr;
+    _rawInputHandler = nullptr;
     m_pollingInterval = 0;
+    m_initializeRetries = 0;
     m_notifyDelay = 0;
     m_orientationLocked = false;
     m_currentOrientation = OrientationEnums::ORIENTATION_INVALID;
@@ -278,11 +279,19 @@ void OrientationManager::initializeAccellerometer()
     _accellerometer = new AccellerometerController(this->accellerometerName(),this);
     QString errore;
     if ( !_accellerometer->initialize(&errore)) {
-        sendErrorNotification(errore);
+        if (m_initializeRetries > 5) {
+            sendErrorNotification(errore);
+        } else {
+            // Retry
+            m_initializeRetries++;
+            QTimer::singleShot(1000,this,SLOT(initializeAccellerometer()));
+        }
+        return;
     } else {
         m_currentOrientation = OrientationEnums::ORIENTATION_TOP;
     }
     connect(_accellerometer,SIGNAL(currentOrientationChanged(OrientationEnums::OrientationPositions)),this,SLOT(startTmrAccellerometer()));
+    startAccellerometer();
 
 }
 
